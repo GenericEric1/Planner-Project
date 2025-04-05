@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MixedView Planner</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@5.3.0/dist/cerulean/bootstrap.min.css">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg">
+    <div class="container">
+        <a class="navbar-brand" href="index.html"><img src="https://i.imgur.com/VCBpsyR.png"></a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor04" aria-controls="navbarColor04" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarColor04">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">View</a>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="viewEvents.html">All Events</a>
+                        <a class="dropdown-item" href="holidays.html">Holidays</a>
+                        <a class="dropdown-item" href="viewUrgentEvents.html">Urgent Events</a>
+                        <a class="dropdown-item" href="viewEventTypes.html">Event Types</a>
+                        <a class="dropdown-item" href="viewReminders.html">Reminders</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="todolist.html">To-Do List</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="addEvent.html">Add Event</a>
+                </li>
+            </ul>
+            <a href="login.html"><button class="btn btn-secondary btn-lg" id = "loginButton" hidden = "true">Login</button></a>
+            <button class="btn btn-secondary btn-lg" id = logoutButton hidden = "true">Logout</button>
+        </div>
+    </div>
+</nav>
+<div class="container mt-5">
+    <h2>Search Events By Urgency </h2>
+    <p>Results will display all events of given urgency and greater. </p>
+    <form action="/viewUrgentEvents" method="GET">
+        <div class="mb-3">
+            <label for="urgency" class="form-label">Enter Urgency Number:</label>
+            <input type="text" id="urgency" name="urgency" class="form-control">
+        </div>
+        <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', async () => {
+        const loginButton = document.getElementById('loginButton');
+        const logoutButton = document.getElementById('logoutButton');
+        const getStartedButton = document.getElementById('getStartedButton');
+
+        try {
+            // Fetch if user is logged in
+            const response = await fetch(`/index/loggedin`); // Backend endpoint
+            const loggedInUsers = await response.json();
+            if (loggedInUsers.length > 0) {
+              logoutButton.hidden = false //if a user is logged in, show logout button
+
+              } else {
+              loginButton.hidden = false //if no user, show login button
+              getStartedButton.hidden = true //hide get started button
+              }
+            } catch (error) {
+            console.error('Error fetching if user is logged in:', error);
+          }
+
+        // Logout all users when logout button is pressed
+        logoutButton.addEventListener('click', async (event) => {
+            //logout all users
+            try {
+                //Send a request to the backend to fetch queries.
+                const response = await fetch(`/index/logout`);
+                const data = await response.json();
+                location.reload();
+                //display successful logout message
+                // <div class="alert alert-dismissible alert-success">
+                //   <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                //   You have successfully been logged out.
+                // </div>
+                console.log("users logged out")
+
+            } catch (error) {
+                console.error('Error logging out user:', error);
+            }
+        });
+    });
+</script>
+</body>
+
+<footer>
+    <div class = "navbar bottom">
+        <div class="container text-center">
+            <p class="text-muted">MixViewPlanner © 2024</p>
+        </div>
+    </div>
+</footer>
+</html>
